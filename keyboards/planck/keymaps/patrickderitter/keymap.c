@@ -111,7 +111,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 void encoder_update(bool clockwise) {
-    switch biton32(layer_state) {
+    switch (biton32(layer_state)) {
       case _QWERTY:
         if (clockwise) {
             tap_code(KC_VOLU);

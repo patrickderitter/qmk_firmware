@@ -119,7 +119,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void encoder_update(bool clockwise) {
-    switch biton32(layer_state) {
+    switch (biton32(layer_state)) {
       case _QWERTY:
         if (clockwise) {
             tap_code(KC_VOLU);

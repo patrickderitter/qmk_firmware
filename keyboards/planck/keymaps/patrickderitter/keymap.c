@@ -24,7 +24,7 @@ enum planck_layers {
 };
 
 enum planck_keycodes {
-  QWERTY = SAFE_RANGE,
+  QWERTY = SAFE_RANGE
 };
 
 #define LOWER MO(_LOWER)
@@ -111,36 +111,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 void encoder_update(bool clockwise) {
-    switch (biton32(layer_state)) {
-      case _QWERTY:
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-        break;
-      case _LOWER:
-        if (clockwise) {
-            tap_code(RGB_SAI);
-        } else {
-            tap_code(RGB_SAD);
-        }
-        break;       
-      case _RAISE:
-        if (clockwise) {
-            tap_code(RGB_VAI);
-        } else {
-            tap_code(RGB_VAD);
-        }
-        break;
-      case _ADJUST:
-        if (clockwise) {
-            tap_code(RGB_HUI);
-        } else {
-            tap_code(RGB_HUD);
-        }
-        break;
+    if (clockwise) {
+        tap_code(KC_VOLU);
+    } else {
+        tap_code(KC_VOLD);
     }
-  }
 }
-

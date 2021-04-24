@@ -119,36 +119,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void encoder_update(bool clockwise) {
-    switch (biton32(layer_state)) {
-      case _QWERTY:
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-        break;
-      case _LOWER:
-        if (clockwise) {
-            tap_code(RGB_SAI);
-        } else {
-            tap_code(RGB_SAD);
-        }
-        break;       
-      case _RAISE:
-        if (clockwise) {
-            tap_code(RGB_VAI);
-        } else {
-            tap_code(RGB_VAD);
-        }
-        break;
-      case _ADJUST:
-        if (clockwise) {
-            tap_code(RGB_HUI);
-        } else {
-            tap_code(RGB_HUD);
-        }
-        break;
-    }
+  if (clockwise) {
+      tap_code(KC_VOLU);
+  } else {
+      tap_code(KC_VOLD);
   }
 }
-

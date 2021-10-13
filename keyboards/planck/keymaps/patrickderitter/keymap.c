@@ -24,7 +24,8 @@ enum planck_layers {
 };
 
 enum planck_keycodes {
-  QWERTY = SAFE_RANGE
+  QWERTY = SAFE_RANGE,
+  BACKLIT
 };
 
 #define LOWER MO(_LOWER)
@@ -40,14 +41,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  |-------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
  | Shift |    Z   |    X   |    C   |    V   |    B   |    N   |    M   |    ,   |    .   |    /   |  Enter |
  |-------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------+--------|
- |  Play |  Ctrl  |   Alt  |   GUI  |  Lower |      Space      |  Raise |  Left  |  Down  |   Up   |  Right |
+ | Blite |  Ctrl  |   Alt  |   GUI  |  Lower |      Space      |  Raise |  Left  |  Down  |   Up   |  Right |
  `----------------------------------------------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT_planck_grid(
    KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_BSPC,
    KC_ESC,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,
   KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ENT,
-  KC_MPLY, KC_LCTL, KC_LALT, KC_LGUI,   LOWER,  KC_SPC,  KC_SPC,   RAISE,  KC_LEFT, KC_DOWN,  KC_UP, KC_RGHT
+  BACKLIT, KC_LCTL, KC_LALT, KC_LGUI,   LOWER,  KC_SPC,  KC_SPC,   RAISE,  KC_LEFT, KC_DOWN,  KC_UP, KC_RGHT
 ),
 
 /* Lower
@@ -109,13 +110,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 layer_state_t layer_state_set_user(layer_state_t state) {
   return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
-
-void encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
-        if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
-            tap_code(KC_VOLD);
-        }
-    }
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case QWERTY:
+      if (record->event.pressed) {
+        print("mode just switched to qwerty and this is a huge string\n");
+        set_single_persistent_default_layer(_QWERTY);
+      }
+      return false;
+      break;
+    case BACKLIT:
+      if (record->event.pressed) {
+        register_code(KC_RSFT);
+        #ifdef BACKLIGHT_ENABLE
+          backlight_step();
+        #endif
+        #ifdef KEYBOARD_planck_rev5
+          writePinLow(E6);
+        #endif
+      } else {
+        unregister_code(KC_RSFT);
+        #ifdef KEYBOARD_planck_rev5
+          writePinHigh(E6);
+        #endif
+      }
+      return false;
+      break;
+  }
+  return true;
 }

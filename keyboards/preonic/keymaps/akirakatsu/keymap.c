@@ -70,4 +70,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_PGDN, _______, _______, _______, _______,   DEBUG, _______, _______, _______, _______, _______, _______, 
   _______, _______, _______, _______,           KC_SPC, KC_HOME,  KC_END, KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT
 )
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+        case LOWER:
+          if (record->event.pressed) {
+            layer_on(_LOWER);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+          } else {
+            layer_off(_LOWER);
+            update_tri_layer(_LOWER, _RAISE, _ADJUST);
+          }
+          return false;
+          break;
+      }
+    return true;
 };
